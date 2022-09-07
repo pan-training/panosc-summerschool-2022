@@ -1,0 +1,39 @@
+#This test calculates a three-dimensional model for nitrogen molecule, considering 
+CalculationMode = td 
+Debug = trace 
+Dimensions = 3 
+fromScratch = yes 
+PseudopotentialSet = pseudodojo_pbe 
+FilterPotentials = filter_none 
+XYZCoordinates = "N2.xyz" 
+BoxShape = sphere 
+Radius = 50*angstrom 
+Spacing = 0.3*angstrom 
+TheoryLevel = kohn_sham 
+#Frequency corresponding to 800nm. 
+omega = 0.05655 
+period = 0.6*femtosecond 
+#In the original reference, there are 96 cycles instead of 8. 
+stime = 30*period 
+#The time-step is shorter in the original reference. But the propagation 
+#algorithm is also probably different. 
+dt = period/100 
+TDPropagationTime = stime 
+TDPropagator = exp_mid 
+TDExponentialMethod = lanczos 
+TDExpOrder = 20 
+TDTimeStep = dt 
+%TDExternalFields 
+electric_field   | 1 | 0 | 0 | omega | "envelope_function" 
+% 
+electric_amplitude = (sqrt(4*10^14)/sqrt(3.509470*10^16)) 
+%TDFunctions 
+"envelope_function" | tdf_from_expr | "electric_amplitude*(sin(pi/stime*t))^2" 
+% 
+AbsorbingBoundaries = mask 
+AbWidth = 50 
+%TDOutput 
+ laser 
+ multipoles 
+ dipole_acceleration
+%

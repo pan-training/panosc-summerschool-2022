@@ -1,0 +1,19 @@
+# This test calculates a one-dimensional model for Hydrogen, considering 
+CalculationMode = gs 
+Dimensions = 3 
+fromScratch = yes 
+BoxShape = sphere 
+# In the original reference, the spacing is 0.25 a.u. 
+Spacing = 0.35 
+# In the original reference, the box is 300 a.u. long. p 
+Radius = 200.0 
+#We use Kohn Sham method 
+TheoryLevel = kohn_sham 
+#Coordinates for N2 molecule 
+XYZCoordinates = "N2.xyz" 
+#Maximum number of iterations for SCF calculations 
+MaximumIter = 300 
+#Boundaries of the simulation box absorbing defined with mask function. 
+AbsorbingBoundaries = mask 
+#Specifies the boundary width 
+AbWidth = 50 

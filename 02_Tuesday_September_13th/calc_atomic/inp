@@ -1,0 +1,70 @@
+
+#---> Calculation Mode
+CalculationMode = td
+Dimensions = 3
+PeriodicDimensions = 0
+
+#---> Structure of lattice
+Spacing = 0.2*angstrom
+BoxShape = parallelepiped
+
+%Lsize 
+20*angstrom | 20*angstrom | 20*angstrom
+%
+
+% Coordinates
+"Ar" | 0.0 | 0.0 | 0.0
+%
+
+#-------------------> THEORY LEVEL <----------------------------------------#
+LCAOStart = lcao_states
+PseudopotentialSet = hgh_lda
+EigenSolver = rmmdiis
+ExtraStates = 0
+
+#--> Parallelisation
+ParDomains = auto
+ParStates  = auto
+
+ConvRelDens = 1e-7
+#----------------------TD-Part------------------------------------#
+# read restart
+%RestartOptions
+  restart_gs | "./restart"
+%
+
+TDPropagator = aetrs
+TDExponentialMethod = lanczos
+TDExpOrder = 16
+
+FFTLibrary = fftw
+
+TDPropagationtime = 17.0110765695113/0.024 # in a.u.
+TDTimeStep = 0.008/0.024   # in a.u.
+
+AbsorbingBoundaries = cap
+ABCapHeight = -1
+ABWidth=2.0*angstrom
+
+# %ABShape
+# (20-2.0)*angstrom | 20*angstrom | "abs(z)"
+# %
+
+%TDFunctions
+    "envelope" | tdf_from_expr | "151.96753174922915*(sin(pi*t/(2*330.9578025034375)))^2*(1-step(t-2*330.9578025034375))"
+     "CEP" | tdf_cw | 0
+%
+
+omega_au = 0.056954559702042315 
+%TDExternalFields
+ vector_potential | 1 | 0 | 0 | omega_au | "envelope" | "CEP"
+%
+
+# OutputInterval = 5
+# TDOutputComputeInterval = 5
+
+%TDOutput
+laser 
+dipole_acceleration 
+%
+

@@ -1,0 +1,56 @@
+CalculationMode = td
+
+PseudopotentialSet = hgh_lda
+%Coordinates
+ 'Ar' | 0 | 0 | 0
+%
+
+BoxShape = sphere
+Radius = 20*angstrom
+Spacing = 0.18*angstrom
+
+
+
+#----------------------TD-Part------------------------------------#
+TDPropagator =  aetrs #exp_mid
+TDExponentialMethod =   lanczos #taylor
+TDExpOrder = 16
+
+t_pulse= (5.34*pi)/(2*acos(2^(-1/4)))          # in fs
+t_pulse_au= t_pulse/(2.4*10^(-2))  # in a.u.
+t_simulation = t_pulse_au  # in fs
+
+TDPropagationtime= t_simulation #/(2.4*10^(-2)) # in a.u.
+TDTimeStep = 0.1   # in a.u.
+
+
+lambda = 800 # nm
+Intensity= 8*10^(14) # in W/cm^2
+omega_au = (4.13566733e-15*299792458)/(lambda*1.0e-9)*0.0367493 # in Ha
+
+
+e_amplitude=sqrt(Intensity/(3.51*10^(16)))   # in a.u.
+A_amplitude=c*e_amplitude/omega_au           # in a.u.
+
+AbsorbingBoundaries = cap
+ABWidth = 8*angstrom
+
+%TDExternalFields
+ vector_potential | 0 | 0 | 1 | omega_au | "envelope_sin_squarre" | "CEP"
+%
+# electric_field | 0 | 0 | 1 | omega_au | "envelope_sin_squarre" | "CEP"
+
+%TDFunctions
+    "envelope_sin_squarre" | tdf_from_expr | "-A_amplitude*(sin(pi*t/(t_pulse_au)))^2*(1-step(t-t_pulse_au))"
+     "CEP" | tdf_cw | -omega_au*t_pulse_au/2
+%
+
+%TDOutput
+  laser
+  total_current
+  multipoles
+  dipole_acceleration
+%
+
+OutputInterval = 10
+TDOutputComputeInterval = 10

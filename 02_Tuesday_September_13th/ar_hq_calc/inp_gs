@@ -1,0 +1,13 @@
+CalculationMode = gs
+
+PseudopotentialSet = hgh_lda
+
+
+%Coordinates
+ 'Ar' | 0 | 0 | 0
+%
+
+BoxShape = sphere
+Radius = 20*angstrom
+Spacing = 0.18*angstrom
+
